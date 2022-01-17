@@ -27,7 +27,7 @@ namespace DiscordRankingBot.Network
         
         public async Task<PlayerStatsDescriptor[]> GetStats(string url)
         {
-            var stats = 
+            throw new NotImplementedException();
         }
     }
 }
