@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DiscordRankingBot.Network.Service
 {
-    public enum Difficulty
+    public enum Difficulties
     {
         Casual,
         Pro,
