@@ -18,12 +18,15 @@ namespace DiscordRankingBot.Network.Service
         public float AverageClusterSize { get; set; }
         public float AverageClusterColorCount { get; set; }
         public int Overfills { get; set; }
-
+        public bool CleanFinish { get; set; }
+        public Match MaxMatch { get; set; }
+        public bool SeeingRed { get; set; }
+        public bool ButterNinja { get; set; }
         public Characters Character { get; set; }
         public Difficulties Difficulty { get; set; }
         public Dictionary<BlockColor, ColorStats> ColorStats { get; set; }
         public Dictionary<Powerups, int> PowerupsStats { get; set; }
-
+        
         public float this[string key]
         {
             set

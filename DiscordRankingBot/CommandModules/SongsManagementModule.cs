@@ -10,6 +10,9 @@ using Microsoft.Extensions.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using DiscordRankingBot.Services.Internal;
+using EventScheduler.Events;
+using EventScheduler.Service;
 
 namespace DiscordRankingBot.CommandModules
 {
@@ -20,6 +23,7 @@ namespace DiscordRankingBot.CommandModules
         private IConfigurationRoot _config;
         private DiscordSocketClient _client;
         private Regex UrlMatchRegex = new Regex(@"(?i)(http(s)?:\/\/)(\w{2,25}\.)+\w{3}([a-z0-9\-?=$-_.+!*()]+)(?i)", RegexOptions.Singleline);
+
         public SongsManagementModule(IConfigurationRoot config, DiscordSocketClient client)
         {
             _config = config;
