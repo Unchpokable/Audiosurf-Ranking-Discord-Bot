@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EventScheduler.Events;
+using System.Data.SQLite;
 
 namespace DiscordRankingBot
 {

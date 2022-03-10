@@ -6,6 +6,8 @@ using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using DiscordRankingBot.Services;
 using Microsoft.Extensions.Configuration;
+using System.IO;
+using System.Data.SQLite;
 
 namespace DiscordRankingBot
 {
@@ -13,6 +15,7 @@ namespace DiscordRankingBot
     {
         public IConfigurationRoot Configuration { get; private set; }
 
+        private SQLiteConnection _database;
         private IServiceCollection _services = new ServiceCollection();
         private ServiceProvider _serviceProvider;
 
@@ -22,6 +25,7 @@ namespace DiscordRankingBot
         {
             var builder = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("config.json");
             Configuration = builder.Build();
+            InitializeDatabase();
             ConfigureServices();
             _serviceProvider = _services.BuildServiceProvider();
 
@@ -51,7 +55,28 @@ namespace DiscordRankingBot
                 DefaultRunMode = RunMode.Async
             }));
 
-            _services.AddSingleton<Startup>().AddSingleton<CommandHandler>().AddSingleton(Configuration);
+            _services.AddSingleton<Startup>().AddSingleton<CommandHandler>().AddSingleton(Configuration).AddSingleton(_database);
+        }
+
+        private void InitializeDatabase()
+        {
+            if (!File.Exists(Configuration["default_database"]))
+                SQLiteConnection.CreateFile(Configuration["default_database"]);
+
+            _database = new SQLiteConnection($"Data Source={Configuration["default_database"]}; Version=3;");
+            var queryGeneralInit = @"
+            PRAGMA foreign_keys=on;
+
+            CREATE TABLE IF NOT EXISTS Users (
+            [id] INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            [nickname] TEXT NOT NULL,
+            [perf_rating] INTEGER NOT NULL CHECK (PERF_RATING >= 0),
+            [is_apprentice] BOOLEAN NOT NULL CHECK (is_apprentice in (0, 1)) )
+";
+            var command = new SQLiteCommand(queryGeneralInit, _database);
+            _database.Open();
+            command.ExecuteNonQuery();
+            _database.Close();
         }
     }
 }
